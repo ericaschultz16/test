@@ -1,0 +1,984 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# NCAA Volleyball Box Scores\n",
+    "\n",
+    "In this project, I am exploring a dataset that includes box scores for all NCAA volleyball matches between 2012-2019. The dataset can be found here: https://www.kaggle.com/tylerwiddison/ncaa-womens-volleyball-boxscores-20122019?select=ncaa_w_boxscores_2012-2019.csv\n",
+    "\n",
+    "### Importing the Data\n",
+    "##### Importing Packages"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "import numpy as np\n",
+    "import seaborn as sns"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##### Importing the data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Unnamed: 0</th>\n",
+       "      <th>assists</th>\n",
+       "      <th>attackAttempts</th>\n",
+       "      <th>attackErrors</th>\n",
+       "      <th>ballHandlingErrors</th>\n",
+       "      <th>blockAssists</th>\n",
+       "      <th>blockSolos</th>\n",
+       "      <th>blockingErrors</th>\n",
+       "      <th>digs</th>\n",
+       "      <th>firstName</th>\n",
+       "      <th>...</th>\n",
+       "      <th>team</th>\n",
+       "      <th>participated</th>\n",
+       "      <th>points</th>\n",
+       "      <th>receptionErrors</th>\n",
+       "      <th>serviceAces</th>\n",
+       "      <th>serviceErrors</th>\n",
+       "      <th>started</th>\n",
+       "      <th>opponent</th>\n",
+       "      <th>url_to_stats</th>\n",
+       "      <th>dates</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>19</td>\n",
+       "      <td>5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>4</td>\n",
+       "      <td>Patricia</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>3.0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>11</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>Katie</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>7.5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Olivia</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>3</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0</td>\n",
+       "      <td>19</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Sarena</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>7.5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>4</td>\n",
+       "      <td>5</td>\n",
+       "      <td>1</td>\n",
+       "      <td>36</td>\n",
+       "      <td>7</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>3</td>\n",
+       "      <td>Maddi</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>5 rows × 26 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Unnamed: 0  assists  attackAttempts  attackErrors  ballHandlingErrors  \\\n",
+       "0           1       19               5             0                   1   \n",
+       "1           2        0              11             0                   0   \n",
+       "2           3        0               7             2                   0   \n",
+       "3           4        0              19             3                   0   \n",
+       "4           5        1              36             7                   0   \n",
+       "\n",
+       "   blockAssists  blockSolos  blockingErrors  digs firstName  ...  team  \\\n",
+       "0             0           0               0     4  Patricia  ...  navy   \n",
+       "1             3           2               1     1     Katie  ...  navy   \n",
+       "2             0           0               0     0    Olivia  ...  navy   \n",
+       "3             1           1               0     0    Sarena  ...  navy   \n",
+       "4             0           0               1     3     Maddi  ...  navy   \n",
+       "\n",
+       "   participated  points  receptionErrors  serviceAces serviceErrors started  \\\n",
+       "0             Y     3.0                0            1             2       Y   \n",
+       "1             Y     7.5                0            0             0       Y   \n",
+       "2             Y     1.0                0            0             0       Y   \n",
+       "3             Y     7.5                0            0             2       Y   \n",
+       "4             Y     2.0                3            0             0       Y   \n",
+       "\n",
+       "   opponent                                       url_to_stats       dates  \n",
+       "0  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "1  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "2  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "3  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "4  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "\n",
+       "[5 rows x 26 columns]"
+      ]
+     },
+     "execution_count": 41,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa = pd.read_csv(\"Data/ncaa_w_boxscores_2012-2019.csv\")\n",
+    "\n",
+    "ncaa.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>assists</th>\n",
+       "      <th>attackAttempts</th>\n",
+       "      <th>attackErrors</th>\n",
+       "      <th>ballHandlingErrors</th>\n",
+       "      <th>blockAssists</th>\n",
+       "      <th>blockSolos</th>\n",
+       "      <th>blockingErrors</th>\n",
+       "      <th>digs</th>\n",
+       "      <th>firstName</th>\n",
+       "      <th>gamesPlayed</th>\n",
+       "      <th>...</th>\n",
+       "      <th>team</th>\n",
+       "      <th>participated</th>\n",
+       "      <th>points</th>\n",
+       "      <th>receptionErrors</th>\n",
+       "      <th>serviceAces</th>\n",
+       "      <th>serviceErrors</th>\n",
+       "      <th>started</th>\n",
+       "      <th>opponent</th>\n",
+       "      <th>url_to_stats</th>\n",
+       "      <th>dates</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <td>0</td>\n",
+       "      <td>19</td>\n",
+       "      <td>5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>4</td>\n",
+       "      <td>Patricia</td>\n",
+       "      <td>3</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>3.0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>11</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>Katie</td>\n",
+       "      <td>3</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>7.5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Olivia</td>\n",
+       "      <td>2</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>19</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Sarena</td>\n",
+       "      <td>3</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>7.5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>4</td>\n",
+       "      <td>1</td>\n",
+       "      <td>36</td>\n",
+       "      <td>7</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>3</td>\n",
+       "      <td>Maddi</td>\n",
+       "      <td>3</td>\n",
+       "      <td>...</td>\n",
+       "      <td>navy</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>5 rows × 25 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   assists  attackAttempts  attackErrors  ballHandlingErrors  blockAssists  \\\n",
+       "0       19               5             0                   1             0   \n",
+       "1        0              11             0                   0             3   \n",
+       "2        0               7             2                   0             0   \n",
+       "3        0              19             3                   0             1   \n",
+       "4        1              36             7                   0             0   \n",
+       "\n",
+       "   blockSolos  blockingErrors  digs firstName  gamesPlayed  ...  team  \\\n",
+       "0           0               0     4  Patricia            3  ...  navy   \n",
+       "1           2               1     1     Katie            3  ...  navy   \n",
+       "2           0               0     0    Olivia            2  ...  navy   \n",
+       "3           1               0     0    Sarena            3  ...  navy   \n",
+       "4           0               1     3     Maddi            3  ...  navy   \n",
+       "\n",
+       "   participated  points  receptionErrors serviceAces serviceErrors started  \\\n",
+       "0             Y     3.0                0           1             2       Y   \n",
+       "1             Y     7.5                0           0             0       Y   \n",
+       "2             Y     1.0                0           0             0       Y   \n",
+       "3             Y     7.5                0           0             2       Y   \n",
+       "4             Y     2.0                3           0             0       Y   \n",
+       "\n",
+       "   opponent                                       url_to_stats       dates  \n",
+       "0  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "1  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "2  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "3  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "4  michigan  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30  \n",
+       "\n",
+       "[5 rows x 25 columns]"
+      ]
+     },
+     "execution_count": 42,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#I'm going to drop the first column because it doesn't really make sense\n",
+    "ncaa.drop('Unnamed: 0',1, inplace = True)\n",
+    "ncaa.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(781962, 25)"
+      ]
+     },
+     "execution_count": 43,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "assists                 int64\n",
+       "attackAttempts          int64\n",
+       "attackErrors            int64\n",
+       "ballHandlingErrors      int64\n",
+       "blockAssists            int64\n",
+       "blockSolos              int64\n",
+       "blockingErrors          int64\n",
+       "digs                    int64\n",
+       "firstName              object\n",
+       "gamesPlayed             int64\n",
+       "hittingPercentage     float64\n",
+       "home_team                bool\n",
+       "jerseyNum             float64\n",
+       "kills                   int64\n",
+       "lastName               object\n",
+       "team                   object\n",
+       "participated           object\n",
+       "points                float64\n",
+       "receptionErrors         int64\n",
+       "serviceAces             int64\n",
+       "serviceErrors           int64\n",
+       "started                object\n",
+       "opponent               object\n",
+       "url_to_stats           object\n",
+       "dates                  object\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 44,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa.dtypes"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Y    781962\n",
+       "Name: participated, dtype: int64"
+      ]
+     },
+     "execution_count": 45,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa.participated.value_counts()\n",
+    "#This shows that every row has participated == Y"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Y    436566\n",
+       "N    345396\n",
+       "Name: started, dtype: int64"
+      ]
+     },
+     "execution_count": 46,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa.started.value_counts()\n",
+    "#This shows whether the player started the set (Y/N)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "436566"
+      ]
+     },
+     "execution_count": 47,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Im going to change this column to be boolean\n",
+    "mapping = {'Y': True, 'N':False}\n",
+    "ncaa['started'] = ncaa['started'].map(mapping)\n",
+    "ncaa['started'].sum() #check that we have the correct number of True's"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "dtype('bool')"
+      ]
+     },
+     "execution_count": 48,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa.started.dtype #checking the type is boolean"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "dtype('O')"
+      ]
+     },
+     "execution_count": 49,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa.dates.dtype"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0   2018-11-30\n",
+       "1   2018-11-30\n",
+       "2   2018-11-30\n",
+       "3   2018-11-30\n",
+       "4   2018-11-30\n",
+       "Name: date, dtype: datetime64[ns]"
+      ]
+     },
+     "execution_count": 50,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa['date'] = pd.to_datetime(ncaa.dates)\n",
+    "ncaa.date.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ncaa = ncaa.sort_index()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 56,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>assists</th>\n",
+       "      <th>attackAttempts</th>\n",
+       "      <th>attackErrors</th>\n",
+       "      <th>ballHandlingErrors</th>\n",
+       "      <th>blockAssists</th>\n",
+       "      <th>blockSolos</th>\n",
+       "      <th>blockingErrors</th>\n",
+       "      <th>digs</th>\n",
+       "      <th>firstName</th>\n",
+       "      <th>gamesPlayed</th>\n",
+       "      <th>...</th>\n",
+       "      <th>participated</th>\n",
+       "      <th>points</th>\n",
+       "      <th>receptionErrors</th>\n",
+       "      <th>serviceAces</th>\n",
+       "      <th>serviceErrors</th>\n",
+       "      <th>started</th>\n",
+       "      <th>opponent</th>\n",
+       "      <th>url_to_stats</th>\n",
+       "      <th>dates</th>\n",
+       "      <th>date</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <td>0</td>\n",
+       "      <td>19</td>\n",
+       "      <td>5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>4</td>\n",
+       "      <td>Patricia</td>\n",
+       "      <td>3</td>\n",
+       "      <td>...</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>3.0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>True</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>11</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>Katie</td>\n",
+       "      <td>3</td>\n",
+       "      <td>...</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>7.5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>True</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Olivia</td>\n",
+       "      <td>2</td>\n",
+       "      <td>...</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>True</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>19</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Sarena</td>\n",
+       "      <td>3</td>\n",
+       "      <td>...</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>7.5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>True</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <td>4</td>\n",
+       "      <td>1</td>\n",
+       "      <td>36</td>\n",
+       "      <td>7</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>3</td>\n",
+       "      <td>Maddi</td>\n",
+       "      <td>3</td>\n",
+       "      <td>...</td>\n",
+       "      <td>Y</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>True</td>\n",
+       "      <td>michigan</td>\n",
+       "      <td>https://data.ncaa.com/casablanca/game/3215943/...</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "      <td>2018-11-30</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>5 rows × 26 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   assists  attackAttempts  attackErrors  ballHandlingErrors  blockAssists  \\\n",
+       "0       19               5             0                   1             0   \n",
+       "1        0              11             0                   0             3   \n",
+       "2        0               7             2                   0             0   \n",
+       "3        0              19             3                   0             1   \n",
+       "4        1              36             7                   0             0   \n",
+       "\n",
+       "   blockSolos  blockingErrors  digs firstName  gamesPlayed  ...  participated  \\\n",
+       "0           0               0     4  Patricia            3  ...             Y   \n",
+       "1           2               1     1     Katie            3  ...             Y   \n",
+       "2           0               0     0    Olivia            2  ...             Y   \n",
+       "3           1               0     0    Sarena            3  ...             Y   \n",
+       "4           0               1     3     Maddi            3  ...             Y   \n",
+       "\n",
+       "   points  receptionErrors  serviceAces serviceErrors started  opponent  \\\n",
+       "0     3.0                0            1             2    True  michigan   \n",
+       "1     7.5                0            0             0    True  michigan   \n",
+       "2     1.0                0            0             0    True  michigan   \n",
+       "3     7.5                0            0             2    True  michigan   \n",
+       "4     2.0                3            0             0    True  michigan   \n",
+       "\n",
+       "                                        url_to_stats       dates       date  \n",
+       "0  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30 2018-11-30  \n",
+       "1  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30 2018-11-30  \n",
+       "2  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30 2018-11-30  \n",
+       "3  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30 2018-11-30  \n",
+       "4  https://data.ncaa.com/casablanca/game/3215943/...  2018-11-30 2018-11-30  \n",
+       "\n",
+       "[5 rows x 26 columns]"
+      ]
+     },
+     "execution_count": 56,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Exploring the Data\n",
+    "\n",
+    "How many teams are shown"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 59,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "380"
+      ]
+     },
+     "execution_count": 59,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "len(ncaa.team.unique())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 62,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "team\n",
+       "southern-nh                0.243583\n",
+       "stanford                   0.209936\n",
+       "tusculum                   0.209714\n",
+       "tex-am-kingsville          0.201444\n",
+       "kentucky                   0.199049\n",
+       "                             ...   \n",
+       "harding                   -0.051667\n",
+       "marian-ind                -0.115000\n",
+       "saint-katherine-college   -0.118267\n",
+       "brevard                   -0.183364\n",
+       "rust                      -0.188875\n",
+       "Name: hittingPercentage, Length: 380, dtype: float64"
+      ]
+     },
+     "execution_count": 62,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ncaa.groupby('team').hittingPercentage.mean().sort_values(ascending = False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.4"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
